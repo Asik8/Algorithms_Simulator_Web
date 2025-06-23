@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Algorithm Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="main-header">
+        <h1>🧮 Algorithm Simulator</h1>
+        <p class="subtitle">Interactive step-by-step algorithm visualizer for beginners</p>
+    </header>
+    <main>
+        <section id="algorithm-list" class="card">
+            <h2>Select an Algorithm</h2>
+            <ul class="algo-list">
+                <li><button class="algo-btn" data-algo="linear-search">Linear Search</button></li>
+                <li><button class="algo-btn" data-algo="bubble-sort">Bubble Sort</button></li>
+                <li><button class="algo-btn" data-algo="binary-search">Binary Search</button></li>
+                <!-- Add more algorithms here -->
+            </ul>
+        </section>
+        <section id="simulator" class="card hidden">
+            <h2 id="algo-title">Algorithm Simulation</h2>
+            <div id="input-section">
+                <!-- Inputs for the selected algorithm will appear here -->
+            </div>
+            <div id="visualization">
+                <!-- Visualization of the algorithm steps -->
+            </div>
+            <div id="controls">
+                <button id="prev-step" disabled>Previous</button>
+                <button id="next-step" disabled>Next</button>
+            </div>
+            <div id="explanation" class="explanation-box">
+                <!-- Step explanation will appear here -->
+            </div>
+            <button id="back-to-home" class="hidden">Back to Home</button>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Algorithm Simulator</p>
+    </footer>
+    <script src="scripts.js"></script>
+</body>
+</html>
