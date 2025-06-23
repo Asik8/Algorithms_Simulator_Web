@@ -256,8 +256,7 @@ function renderBinarySearchTheory() {
 }
 
 function renderBinarySearchInputForm() {
-    renderAlgorithmInfo('binary-search');
-    inputSection.innerHTML += `
+    inputSection.innerHTML = `
         <form id="bs-form">
             <label>Enter sorted array (comma separated):<br>
                 <input type="text" id="bs-array" required placeholder="e.g. 1, 2, 5, 8, 9">
