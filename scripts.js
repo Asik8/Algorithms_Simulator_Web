@@ -824,9 +824,115 @@ function renderBubbleSortTheory() {
                     </span>
                 </li>
             </ul>
+            <div class="algo-code-examples">
+                <b>Bubble Sort Code Examples:</b>
+                <div class="code-lang-tabs">
+                    <button class="code-lang-tab active" data-lang="c">C</button>
+                    <button class="code-lang-tab" data-lang="cpp">C++</button>
+                    <button class="code-lang-tab" data-lang="python">Python</button>
+                    <button class="code-lang-tab" data-lang="js">JavaScript</button>
+                    <button class="code-lang-tab" data-lang="java">Java</button>
+                </div>
+                <div class="code-tab-content">
+                    <pre class="code-block" data-lang="c"><code>// C
+// Function to perform bubble sort
+void bubbleSort(int arr[], int n) {
+    // Traverse through all array elements
+    for (int i = 0; i < n-1; i++) {
+        // Last i elements are already in place
+        for (int j = 0; j < n-i-1; j++) {
+            // Swap if the element found is greater than the next element
+            if (arr[j] > arr[j+1]) {
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}</code></pre>
+                    <pre class="code-block" data-lang="cpp" style="display:none"><code>// C++
+// Function to perform bubble sort
+void bubbleSort(vector<int>& arr) {
+    int n = arr.size();
+    // Traverse through all array elements
+    for (int i = 0; i < n-1; i++) {
+        // Last i elements are already in place
+        for (int j = 0; j < n-i-1; j++) {
+            // Swap if the element found is greater than the next element
+            if (arr[j] > arr[j+1]) {
+                swap(arr[j], arr[j+1]);
+            }
+        }
+    }
+}</code></pre>
+                    <pre class="code-block" data-lang="python" style="display:none"><code># Python
+// Function to perform bubble sort
+def bubble_sort(arr):
+    n = len(arr)
+    // Traverse through all array elements
+    for i in range(n-1):
+        // Last i elements are already in place
+        for j in range(n-i-1):
+            // Swap if the element found is greater than the next element
+            if arr[j] > arr[j+1]:
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+</code></pre>
+                    <pre class="code-block" data-lang="js" style="display:none"><code>// JavaScript
+// Function to perform bubble sort
+function bubbleSort(arr) {
+    let n = arr.length;
+    // Traverse through all array elements
+    for (let i = 0; i < n - 1; i++) {
+        // Last i elements are already in place
+        for (let j = 0; j < n - i - 1; j++) {
+            // Swap if the element found is greater than the next element
+            if (arr[j] > arr[j + 1]) {
+                let temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}</code></pre>
+                    <pre class="code-block" data-lang="java" style="display:none"><code>// Java
+// Function to perform bubble sort
+void bubbleSort(int[] arr) {
+    int n = arr.length;
+    // Traverse through all array elements
+    for (int i = 0; i < n-1; i++) {
+        // Last i elements are already in place
+        for (int j = 0; j < n-i-1; j++) {
+            // Swap if the element found is greater than the next element
+            if (arr[j] > arr[j+1]) {
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+        }
+    }
+}</code></pre>
+                </div>
+            </div>
         </div>
         <button id="bsort-start-sim-btn" class="center-sim-btn">Start Simulation</button>
     `;
+    // Tab switching logic
+    const tabBtns = inputSection.querySelectorAll('.code-lang-tab');
+    const codeBlocks = inputSection.querySelectorAll('.code-block');
+    tabBtns.forEach(btn => {
+        btn.onclick = function() {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const lang = btn.getAttribute('data-lang');
+            codeBlocks.forEach(cb => {
+                if (cb.getAttribute('data-lang') === lang) {
+                    cb.style.display = '';
+                } else {
+                    cb.style.display = 'none';
+                }
+            });
+        };
+    });
     document.getElementById('bsort-start-sim-btn').onclick = function() {
         renderBubbleSortInputForm();
     };
