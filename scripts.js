@@ -336,9 +336,139 @@ function renderBinarySearchTheory() {
                     </span>
                 </li>
             </ul>
+            <div class="algo-code-examples">
+                <b>Binary Search Code Examples:</b>
+                <div class="code-lang-tabs">
+                    <button class="code-lang-tab active" data-lang="c">C</button>
+                    <button class="code-lang-tab" data-lang="cpp">C++</button>
+                    <button class="code-lang-tab" data-lang="python">Python</button>
+                    <button class="code-lang-tab" data-lang="js">JavaScript</button>
+                    <button class="code-lang-tab" data-lang="java">Java</button>
+                </div>
+                <div class="code-tab-content">
+                    <pre class="code-block" data-lang="c"><code>// C
+// Function to perform binary search (iterative)
+int binarySearch(int arr[], int n, int target) {
+    int low = 0, high = n - 1;
+    // Loop until the search range is valid
+    while (low <= high) {
+        // Find the middle index
+        int mid = (low + high) / 2;
+        // If the middle element is the target, return its index
+        if (arr[mid] == target)
+            return mid;
+        // If the target is greater, ignore left half
+        else if (arr[mid] < target)
+            low = mid + 1;
+        // If the target is smaller, ignore right half
+        else
+            high = mid - 1;
+    }
+    // If not found, return -1
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="cpp" style="display:none"><code>// C++
+// Function to perform binary search (iterative)
+int binarySearch(vector<int>& arr, int target) {
+    int low = 0, high = arr.size() - 1;
+    // Loop until the search range is valid
+    while (low <= high) {
+        // Find the middle index
+        int mid = (low + high) / 2;
+        // If the middle element is the target, return its index
+        if (arr[mid] == target)
+            return mid;
+        // If the target is greater, ignore left half
+        else if (arr[mid] < target)
+            low = mid + 1;
+        // If the target is smaller, ignore right half
+        else
+            high = mid - 1;
+    }
+    // If not found, return -1
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="python" style="display:none"><code># Python
+// Function to perform binary search (iterative)
+def binary_search(arr, target):
+    low = 0
+    high = len(arr) - 1
+    // Loop until the search range is valid
+    while low <= high:
+        // Find the middle index
+        mid = (low + high) // 2
+        // If the middle element is the target, return its index
+        if arr[mid] == target:
+            return mid
+        // If the target is greater, ignore left half
+        elif arr[mid] < target:
+            low = mid + 1
+        // If the target is smaller, ignore right half
+        else:
+            high = mid - 1
+    // If not found, return -1
+    return -1</code></pre>
+                    <pre class="code-block" data-lang="js" style="display:none"><code>// JavaScript
+// Function to perform binary search (iterative)
+function binarySearch(arr, target) {
+    let low = 0, high = arr.length - 1;
+    // Loop until the search range is valid
+    while (low <= high) {
+        // Find the middle index
+        let mid = Math.floor((low + high) / 2);
+        // If the middle element is the target, return its index
+        if (arr[mid] === target) return mid;
+        // If the target is greater, ignore left half
+        else if (arr[mid] < target) low = mid + 1;
+        // If the target is smaller, ignore right half
+        else high = mid - 1;
+    }
+    // If not found, return -1
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="java" style="display:none"><code>// Java
+// Function to perform binary search (iterative)
+int binarySearch(int[] arr, int target) {
+    int low = 0, high = arr.length - 1;
+    // Loop until the search range is valid
+    while (low <= high) {
+        // Find the middle index
+        int mid = (low + high) / 2;
+        // If the middle element is the target, return its index
+        if (arr[mid] == target)
+            return mid;
+        // If the target is greater, ignore left half
+        else if (arr[mid] < target)
+            low = mid + 1;
+        // If the target is smaller, ignore right half
+        else
+            high = mid - 1;
+    }
+    // If not found, return -1
+    return -1;
+}</code></pre>
+                </div>
+            </div>
         </div>
         <button id="bs-start-sim-btn" class="center-sim-btn">Start Simulation</button>
     `;
+    // Tab switching logic
+    const tabBtns = inputSection.querySelectorAll('.code-lang-tab');
+    const codeBlocks = inputSection.querySelectorAll('.code-block');
+    tabBtns.forEach(btn => {
+        btn.onclick = function() {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const lang = btn.getAttribute('data-lang');
+            codeBlocks.forEach(cb => {
+                if (cb.getAttribute('data-lang') === lang) {
+                    cb.style.display = '';
+                } else {
+                    cb.style.display = 'none';
+                }
+            });
+        };
+    });
     document.getElementById('bs-start-sim-btn').onclick = function() {
         renderBinarySearchInputForm();
     };
