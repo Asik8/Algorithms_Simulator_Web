@@ -37,10 +37,10 @@ main {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    padding: 2rem 2.5rem;
+    padding: 2rem 3.5rem;
     margin-bottom: 2rem;
     min-width: 320px;
-    max-width: 420px;
+    max-width: 700px;
     width: 100%;
 }
 
@@ -138,19 +138,25 @@ main {
 }
 
 #back-to-home {
-    margin-top: 1rem;
-    background: #ffb84f;
+    margin-top: 1.5rem;
+    background: linear-gradient(90deg, #ffb84f 0%, #ffe066 100%);
     color: #fff;
     border: none;
-    border-radius: 8px;
-    padding: 0.7rem 0;
-    font-size: 1rem;
+    border-radius: 2em;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(255,184,79,0.10);
+    padding: 0.8em 2.5em;
+    font-size: 1.08em;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, color 0.2s, transform 0.18s;
     cursor: pointer;
-    transition: background 0.2s;
 }
 
-#back-to-home:hover {
-    background: #ff9800;
+#back-to-home:hover, #back-to-home:focus {
+    background: linear-gradient(90deg, #ff9800 0%, #ffb84f 100%);
+    color: #fff;
+    transform: scale(1.045);
+    box-shadow: 0 6px 24px rgba(255,184,79,0.16);
 }
 
 footer {
@@ -168,7 +174,7 @@ footer {
     .card {
         padding: 1.2rem 0.7rem;
         min-width: unset;
-        max-width: 98vw;
+        max-width: 99vw;
     }
     main {
         margin: 1rem 0;
@@ -176,4 +182,31 @@ footer {
     .main-header h1 {
         font-size: 1.5rem;
     }
+}
+
+/* Center simulation start buttons */
+.center-sim-btn {
+    display: block;
+    margin: 2.2em auto 1.2em auto;
+    padding-left: 2.5em;
+    padding-right: 2.5em;
+    font-size: 1.08em;
+    background: linear-gradient(90deg, #4f8cff 0%, #6ec6ff 100%);
+    color: #fff;
+    border: none;
+    border-radius: 2em;
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(79,140,255,0.10);
+    padding-top: 0.8em;
+    padding-bottom: 0.8em;
+    letter-spacing: 0.5px;
+    transition: background 0.2s, color 0.2s, transform 0.18s;
+    cursor: pointer;
+}
+
+.center-sim-btn:hover, .center-sim-btn:focus {
+    background: linear-gradient(90deg, #3578e5 0%, #4f8cff 100%);
+    color: #fff;
+    transform: scale(1.045);
+    box-shadow: 0 6px 24px rgba(79,140,255,0.16);
 }

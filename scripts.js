@@ -88,9 +88,95 @@ function renderLinearSearchTheory() {
                     </span>
                 </li>
             </ul>
+            <div class="algo-code-examples">
+                <b>Linear Search Code Examples:</b>
+                <div class="code-lang-tabs">
+                    <button class="code-lang-tab active" data-lang="c">C</button>
+                    <button class="code-lang-tab" data-lang="cpp">C++</button>
+                    <button class="code-lang-tab" data-lang="python">Python</button>
+                    <button class="code-lang-tab" data-lang="js">JavaScript</button>
+                    <button class="code-lang-tab" data-lang="java">Java</button>
+                </div>
+                <div class="code-tab-content">
+                    <pre class="code-block" data-lang="c"><code>// C
+// Function to perform linear search
+int linearSearch(int arr[], int n, int target) {
+    // Loop through each element in the array
+    for (int i = 0; i < n; i++) {
+        // If the current element matches the target, return its index
+        if (arr[i] == target)
+            return i;
+    }
+    // If not found, return -1
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="cpp" style="display:none"><code>// C++
+// Function to perform linear search
+int linearSearch(vector<int>& arr, int target) {
+    // Loop through each element in the vector
+    for (int i = 0; i < arr.size(); i++) {
+        // If the current element matches the target, return its index
+        if (arr[i] == target)
+            return i;
+    }
+    // If not found, return -1
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="python" style="display:none"><code># Python
+# Function to perform linear search
+def linear_search(arr, target):
+    # Loop through each element with its index
+    for i, num in enumerate(arr):
+        # If the current element matches the target, return its index
+        if num == target:
+            return i
+    # If not found, return -1
+    return -1</code></pre>
+                    <pre class="code-block" data-lang="js" style="display:none"><code>// JavaScript
+// Function to perform linear search
+function linearSearch(arr, target) {
+    // Loop through each element in the array
+    for (let i = 0; i < arr.length; i++) {
+        // If the current element matches the target, return its index
+        if (arr[i] === target) return i;
+    }
+    // If not found, return -1
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="java" style="display:none"><code>// Java
+// Function to perform linear search
+int linearSearch(int[] arr, int target) {
+    // Loop through each element in the array
+    for (int i = 0; i < arr.length; i++) {
+        // If the current element matches the target, return its index
+        if (arr[i] == target)
+            return i;
+    }
+    // If not found, return -1
+    return -1;
+}</code></pre>
+                </div>
+            </div>
         </div>
-        <button id="ls-start-sim-btn" style="margin-bottom:1.2em;">Start Simulation</button>
+        <button id="ls-start-sim-btn" class="center-sim-btn">Start Simulation</button>
     `;
+    // Tab switching logic
+    const tabBtns = inputSection.querySelectorAll('.code-lang-tab');
+    const codeBlocks = inputSection.querySelectorAll('.code-block');
+    tabBtns.forEach(btn => {
+        btn.onclick = function() {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const lang = btn.getAttribute('data-lang');
+            codeBlocks.forEach(cb => {
+                if (cb.getAttribute('data-lang') === lang) {
+                    cb.style.display = '';
+                } else {
+                    cb.style.display = 'none';
+                }
+            });
+        };
+    });
     document.getElementById('ls-start-sim-btn').onclick = function() {
         renderLinearSearchInputForm();
     };
@@ -251,7 +337,7 @@ function renderBinarySearchTheory() {
                 </li>
             </ul>
         </div>
-        <button id="bs-start-sim-btn" style="margin-bottom:1.2em;">Start Simulation</button>
+        <button id="bs-start-sim-btn" class="center-sim-btn">Start Simulation</button>
     `;
     document.getElementById('bs-start-sim-btn').onclick = function() {
         renderBinarySearchInputForm();
@@ -495,6 +581,49 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     text-align: center;
     letter-spacing: 0.5px;
 }
+.algo-code-examples {
+    margin-top: 1em;
+}
+.code-lang-tabs {
+    display: flex;
+    gap: 0.5em;
+    margin: 0.7em 0 0.2em 0;
+}
+.code-lang-tab {
+    background: #e3edff;
+    color: #2a4d8f;
+    border: none;
+    border-radius: 6px 6px 0 0;
+    padding: 0.4em 1.1em;
+    font-size: 1em;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+    outline: none;
+}
+.code-lang-tab.active, .code-lang-tab:hover {
+    background: #4f8cff;
+    color: #fff;
+}
+.code-tab-content {
+    background: #23272e;
+    color: #e0e7ef;
+    border-radius: 0 0 7px 7px;
+    padding: 0.7em 0.8em;
+    font-size: 0.98em;
+    overflow-x: auto;
+    margin-bottom: 0.5em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+.code-block {
+    margin: 0;
+    font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
+    font-size: 0.97em;
+    background: none;
+    color: inherit;
+    display: block;
+    white-space: pre;
+}
 </style>`);
 
 function renderBinarySearchLegend() {
@@ -566,7 +695,7 @@ function renderBubbleSortTheory() {
                 </li>
             </ul>
         </div>
-        <button id="bsort-start-sim-btn" style="margin-bottom:1.2em;">Start Simulation</button>
+        <button id="bsort-start-sim-btn" class="center-sim-btn">Start Simulation</button>
     `;
     document.getElementById('bsort-start-sim-btn').onclick = function() {
         renderBubbleSortInputForm();
@@ -689,76 +818,16 @@ function updateBubbleSortStep() {
     nextBtn.disabled = bubbleSortStep === bubbleSortSteps.length - 1;
 }
 
-// Step navigation for Bubble Sort
-const origPrevBubble = prevBtn.onclick;
-const origNextBubble = nextBtn.onclick;
-prevBtn.onclick = function() {
-    if (currentAlgo === 'bubble-sort') {
-        if (bubbleSortStep > 0) {
-            bubbleSortStep--;
-            updateBubbleSortStep();
-        }
-    } else if (origPrevBubble) {
-        origPrevBubble();
-    }
-};
-nextBtn.onclick = function() {
-    if (currentAlgo === 'bubble-sort') {
-        if (bubbleSortStep < bubbleSortSteps.length - 1) {
-            bubbleSortStep++;
-            updateBubbleSortStep();
-        }
-    } else if (origNextBubble) {
-        origNextBubble();
-    }
-};
-
 function renderBubbleSortLegend() {
     const legend = document.createElement('div');
-    legend.id = 'bsort-legend';
+    legend.id = legendId;
     legend.style.margin = '0.5rem 0 1rem 0';
     legend.innerHTML = `
-        <span class="bsort-item bsort-compared" style="margin-right:8px;">Compared</span>
-        <span class="bsort-item bsort-swapped" style="margin-right:8px;">Swapped</span>
-        <span class="bsort-item bsort-sorted" style="margin-right:8px;">Sorted</span>
+        <span class="bsort-item bs-low" style="margin-right:8px;">Low</span>
+        <span class="bsort-item bs-high" style="margin-right:8px;">High</span>
+        <span class="bsort-item bs-mid" style="margin-right:8px;">Mid</span>
+        <span class="bsort-item bs-found" style="margin-right:8px;">Found</span>
+        <span class="bsort-item bs-outside" style="margin-right:8px;">Outside Range</span>
     `;
     visualization.parentNode.insertBefore(legend, visualization);
 }
-
-document.head.insertAdjacentHTML('beforeend', `<style>
-.bsort-item {
-    display: inline-block;
-    min-width: 2.2em;
-    padding: 0.5em 0.7em;
-    margin: 0 0.2em;
-    border-radius: 6px;
-    background: #e3edff;
-    font-size: 1.1em;
-    transition: background 0.2s, color 0.2s;
-    position: relative;
-    vertical-align: bottom;
-}
-.bsort-index {
-    display: block;
-    font-size: 0.85em;
-    color: #888;
-    margin-top: 0.15em;
-    text-align: center;
-    letter-spacing: 0.5px;
-}
-.bsort-compared {
-    background: #ffb84f;
-    color: #fff;
-    font-weight: bold;
-}
-.bsort-swapped {
-    background: #e53935;
-    color: #fff;
-    font-weight: bold;
-}
-.bsort-sorted {
-    background: #4f8cff;
-    color: #fff;
-    font-weight: bold;
-}
-</style>`);
