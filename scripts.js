@@ -44,6 +44,9 @@ function showSimulator(algo) {
     if (algo === 'bubble-sort') {
         renderBubbleSortTheory();
     }
+    if (algo === 'fibonacci-search') {
+        renderFibonacciSearchTheory();
+    }
     // Add more algorithms here
 }
 
@@ -52,6 +55,7 @@ function algoToTitle(algo) {
         case 'linear-search': return 'Linear Search';
         case 'bubble-sort': return 'Bubble Sort';
         case 'binary-search': return 'Binary Search';
+        case 'fibonacci-search': return 'Fibonacci Search';
         default: return algo;
     }
 }
@@ -1067,3 +1071,430 @@ function renderBubbleSortLegend() {
     `;
     visualization.parentNode.insertBefore(legend, visualization);
 }
+
+// Fibonacci Search Theory Section
+function renderFibonacciSearchTheory() {
+    inputSection.innerHTML = `
+        <div class="algo-info-box">
+            <b>Fibonacci Search - Theoretical Knowledge</b><br>
+            <ul style='margin:0.7em 0 0 1.2em;'>
+                <li><b>Definition:</b> Fibonacci Search is a search algorithm that uses Fibonacci numbers to divide the array and search for a value in a <b>sorted</b> array.</li>
+                <li><b>Time Complexity:</b> O(log n)</li>
+                <li><b>Space Complexity:</b> O(1)</li>
+                <li><b>Use Cases:</b>
+                    <ul style='margin:0.3em 0 0 1.2em;'>
+                        <li>Searching in large sorted arrays</li>
+                        <li>When division operations are expensive (Fibonacci Search uses only addition and subtraction)</li>
+                    </ul>
+                </li>
+                <li><b>Example:</b><br>
+                    <span style='display:inline-block;background:#f0f4fa;padding:0.5em 0.8em;border-radius:6px;'>
+                        Array: [10, 22, 35, 40, 45, 50, 80, 82, 85, 90, 100]<br>
+                        Target: <b>85</b><br>
+                        Steps:<br>
+                        1. Find the smallest Fibonacci number greater than or equal to array length (here, 13).<br>
+                        2. Set offset = -1.<br>
+                        3. Probe index = min(offset + fibM2, n-1).<br>
+                        4. Repeat until target is found or range is empty.
+                    </span>
+                </li>
+            </ul>
+            <div class="algo-code-examples">
+                <b>Fibonacci Search Code Examples:</b>
+                <div class="code-lang-tabs">
+                    <button class="code-lang-tab active" data-lang="c">C</button>
+                    <button class="code-lang-tab" data-lang="cpp">C++</button>
+                    <button class="code-lang-tab" data-lang="python">Python</button>
+                    <button class="code-lang-tab" data-lang="js">JavaScript</button>
+                    <button class="code-lang-tab" data-lang="java">Java</button>
+                </div>
+                <div class="code-tab-content">
+                    <pre class="code-block" data-lang="c"><code>// C
+// Function to perform Fibonacci Search
+int fibonacciSearch(int arr[], int n, int target) {
+    // Initialize fibonacci numbers
+    int fibMMm2 = 0; // (m-2)'th Fibonacci No.
+    int fibMMm1 = 1; // (m-1)'th Fibonacci No.
+    int fibM = fibMMm2 + fibMMm1; // m'th Fibonacci
+    // Find the smallest Fibonacci number greater than or equal to n
+    while (fibM < n) {
+        fibMMm2 = fibMMm1;
+        fibMMm1 = fibM;
+        fibM = fibMMm2 + fibMMm1;
+    }
+    int offset = -1;
+    // While there are elements to be inspected
+    while (fibM > 1) {
+        int i = (offset + fibMMm2 < n-1) ? offset + fibMMm2 : n-1;
+        // If target is greater, cut the subarray from offset to i
+        if (arr[i] < target) {
+            fibM = fibMMm1;
+            fibMMm1 = fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+            offset = i;
+        }
+        // If target is less, cut the subarray after i+1
+        else if (arr[i] > target) {
+            fibM = fibMMm2;
+            fibMMm1 = fibMMm1 - fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+        }
+        // Element found
+        else return i;
+    }
+    // Compare the last element
+    if(fibMMm1 && arr[offset+1] == target) return offset+1;
+    // Not found
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="cpp" style="display:none"><code>// C++
+// Function to perform Fibonacci Search
+int fibonacciSearch(vector<int>& arr, int target) {
+    int n = arr.size();
+    int fibMMm2 = 0, fibMMm1 = 1, fibM = fibMMm2 + fibMMm1;
+    while (fibM < n) {
+        fibMMm2 = fibMMm1;
+        fibMMm1 = fibM;
+        fibM = fibMMm2 + fibMMm1;
+    }
+    int offset = -1;
+    while (fibM > 1) {
+        int i = min(offset + fibMMm2, n-1);
+        if (arr[i] < target) {
+            fibM = fibMMm1;
+            fibMMm1 = fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+            offset = i;
+        } else if (arr[i] > target) {
+            fibM = fibMMm2;
+            fibMMm1 = fibMMm1 - fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+        } else return i;
+    }
+    if(fibMMm1 && arr[offset+1] == target) return offset+1;
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="python" style="display:none"><code># Python
+# Function to perform Fibonacci Search
+def fibonacci_search(arr, target):
+    n = len(arr)
+    fibMMm2 = 0  # (m-2)'th Fibonacci No.
+    fibMMm1 = 1  # (m-1)'th Fibonacci No.
+    fibM = fibMMm2 + fibMMm1  # m'th Fibonacci
+    # Find the smallest Fibonacci number greater than or equal to n
+    while fibM < n:
+        fibMMm2, fibMMm1 = fibMMm1, fibM
+        fibM = fibMMm2 + fibMMm1
+    offset = -1
+    while fibM > 1:
+        i = min(offset + fibMMm2, n-1)
+        if arr[i] < target:
+            fibM = fibMMm1
+            fibMMm1 = fibMMm2
+            fibMMm2 = fibM - fibMMm1
+            offset = i
+        elif arr[i] > target:
+            fibM = fibMMm2
+            fibMMm1 = fibMMm1 - fibMMm2
+            fibMMm2 = fibM - fibMMm1
+        else:
+            return i
+    if fibMMm1 and offset+1 < n and arr[offset+1] == target:
+        return offset+1
+    return -1</code></pre>
+                    <pre class="code-block" data-lang="js" style="display:none"><code>// JavaScript
+// Function to perform Fibonacci Search
+function fibonacciSearch(arr, target) {
+    let n = arr.length;
+    let fibMMm2 = 0, fibMMm1 = 1, fibM = fibMMm2 + fibMMm1;
+    while (fibM < n) {
+        fibMMm2 = fibMMm1;
+        fibMMm1 = fibM;
+        fibM = fibMMm2 + fibMMm1;
+    }
+    let offset = -1;
+    while (fibM > 1) {
+        let i = Math.min(offset + fibMMm2, n-1);
+        if (arr[i] < target) {
+            fibM = fibMMm1;
+            fibMMm1 = fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+            offset = i;
+        } else if (arr[i] > target) {
+            fibM = fibMMm2;
+            fibMMm1 = fibMMm1 - fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+        } else return i;
+    }
+    if(fibMMm1 && arr[offset+1] === target) return offset+1;
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="java" style="display:none"><code>// Java
+// Function to perform Fibonacci Search
+int fibonacciSearch(int[] arr, int target) {
+    int n = arr.length;
+    int fibMMm2 = 0, fibMMm1 = 1, fibM = fibMMm2 + fibMMm1;
+    while (fibM < n) {
+        fibMMm2 = fibMMm1;
+        fibMMm1 = fibM;
+        fibM = fibMMm2 + fibMMm1;
+    }
+    int offset = -1;
+    while (fibM > 1) {
+        int i = Math.min(offset + fibMMm2, n-1);
+        if (arr[i] < target) {
+            fibM = fibMMm1;
+            fibMMm1 = fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+            offset = i;
+        } else if (arr[i] > target) {
+            fibM = fibMMm2;
+            fibMMm1 = fibMMm1 - fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+        } else return i;
+    }
+    if(fibMMm1 != 0 && arr[offset+1] == target) return offset+1;
+    return -1;
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <button id="fibo-start-sim-btn" class="center-sim-btn">Start Simulation</button>
+    `;
+    // Tab switching logic
+    const tabBtns = inputSection.querySelectorAll('.code-lang-tab');
+    const codeBlocks = inputSection.querySelectorAll('.code-block');
+    tabBtns.forEach(btn => {
+        btn.onclick = function() {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const lang = btn.getAttribute('data-lang');
+            codeBlocks.forEach(cb => {
+                if (cb.getAttribute('data-lang') === lang) {
+                    cb.style.display = '';
+                } else {
+                    cb.style.display = 'none';
+                }
+            });
+        };
+    });
+    document.getElementById('fibo-start-sim-btn').onclick = function() {
+        renderFibonacciSearchInputForm();
+    };
+}
+
+function renderFibonacciSearchInputForm() {
+    inputSection.innerHTML = `
+        <form id="fibo-form">
+            <label>Enter sorted array (comma separated):<br>
+                <input type="text" id="fibo-array" required placeholder="e.g. 10, 22, 35, 40, 45, 50, 80, 82, 85, 90, 100">
+            </label><br><br>
+            <label>Number to search:<br>
+                <input type="number" id="fibo-target" required placeholder="e.g. 85">
+            </label><br><br>
+            <button type="submit">Simulate</button>
+        </form>
+    `;
+    $('#fibo-form').onsubmit = handleFibonacciSearchInput;
+}
+
+let fibonacciSteps = [];
+let fibonacciStep = 0;
+
+function handleFibonacciSearchInput(e) {
+    e.preventDefault();
+    const arrStr = $('#fibo-array').value.trim();
+    const targetStr = $('#fibo-target').value.trim();
+    if (!arrStr || !targetStr) return;
+    const arr = arrStr.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n));
+    const target = Number(targetStr);
+    if (arr.length === 0 || isNaN(target)) {
+        alert('Please enter a valid sorted array and target number.');
+        return;
+    }
+    // Check if array is sorted
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] < arr[i-1]) {
+            alert('Array must be sorted in ascending order for Fibonacci search.');
+            return;
+        }
+    }
+    fibonacciSteps = buildFibonacciSearchSteps(arr, target);
+    fibonacciStep = 0;
+    inputSection.innerHTML = '';
+    renderFibonacciSearchLegend();
+    updateFibonacciSearchStep();
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+}
+
+function buildFibonacciSearchSteps(arr, target) {
+    const steps = [];
+    let n = arr.length;
+    let fibMMm2 = 0, fibMMm1 = 1, fibM = fibMMm2 + fibMMm1;
+    while (fibM < n) {
+        fibMMm2 = fibMMm1;
+        fibMMm1 = fibM;
+        fibM = fibMMm2 + fibMMm1;
+    }
+    let offset = -1;
+    while (fibM > 1) {
+        let i = Math.min(offset + fibMMm2, n-1);
+        steps.push({
+            arr: arr.slice(),
+            low: offset+1,
+            high: Math.min(offset+fibM, n-1),
+            probe: i,
+            found: arr[i] === target,
+            done: arr[i] === target,
+            value: arr[i],
+            target,
+        });
+        if (arr[i] < target) {
+            fibM = fibMMm1;
+            fibMMm1 = fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+            offset = i;
+        } else if (arr[i] > target) {
+            fibM = fibMMm2;
+            fibMMm1 = fibMMm1 - fibMMm2;
+            fibMMm2 = fibM - fibMMm1;
+        } else {
+            break;
+        }
+    }
+    // Check last element
+    if (!arr.includes(target)) {
+        if (fibMMm1 && arr[offset+1] === target) {
+            steps.push({
+                arr: arr.slice(),
+                low: offset+1,
+                high: offset+1,
+                probe: offset+1,
+                found: true,
+                done: true,
+                value: arr[offset+1],
+                target,
+            });
+        } else {
+            steps.push({
+                arr: arr.slice(),
+                low: 0,
+                high: n-1,
+                probe: null,
+                found: false,
+                done: true,
+                value: null,
+                target,
+            });
+        }
+    }
+    return steps;
+}
+
+function updateFibonacciSearchStep() {
+    if (!fibonacciSteps.length) return;
+    const step = fibonacciSteps[fibonacciStep];
+    visualization.innerHTML = step.arr.map((num, idx) => {
+        let cls = '';
+        if (step.probe === idx && step.found) cls = 'fibo-found';
+        else if (step.probe === idx) cls = 'fibo-probe';
+        else if (idx >= step.low && idx <= step.high) cls = 'fibo-range';
+        else cls = 'fibo-outside';
+        return `<span class="fibo-item ${cls}">
+            <div>${num}</div>
+            <div class="fibo-index">${idx}</div>
+        </span>`;
+    }).join(' ');
+    // Explanation
+    if (step.done && !step.found) {
+        explanation.innerHTML = `Number <b>${step.target}</b> was not found in the array.`;
+    } else if (step.found) {
+        explanation.innerHTML = `Probed index <b>${step.probe}</b> (value: ${step.value}) matches the target <b>${step.target}</b>. Search complete!`;
+    } else {
+        explanation.innerHTML = `Current search range: <b>${step.low}</b> to <b>${step.high}</b>.<br>
+        Probing index <b>${step.probe}</b> (value: ${step.value}).`;
+    }
+    // Button states
+    prevBtn.disabled = fibonacciStep === 0;
+    nextBtn.disabled = fibonacciStep === fibonacciSteps.length - 1;
+}
+
+// Step navigation for Fibonacci Search
+const origPrevFibo = prevBtn.onclick;
+const origNextFibo = nextBtn.onclick;
+prevBtn.onclick = function() {
+    if (currentAlgo === 'fibonacci-search') {
+        if (fibonacciStep > 0) {
+            fibonacciStep--;
+            updateFibonacciSearchStep();
+        }
+    } else if (origPrevFibo) {
+        origPrevFibo();
+    }
+};
+nextBtn.onclick = function() {
+    if (currentAlgo === 'fibonacci-search') {
+        if (fibonacciStep < fibonacciSteps.length - 1) {
+            fibonacciStep++;
+            updateFibonacciSearchStep();
+        }
+    } else if (origNextFibo) {
+        origNextFibo();
+    }
+};
+
+function renderFibonacciSearchLegend() {
+    const legend = document.createElement('div');
+    legend.id = 'fibo-legend';
+    legend.style.margin = '0.5rem 0 1rem 0';
+    legend.innerHTML = `
+        <span class="fibo-item fibo-range" style="margin-right:8px;">Search Range</span>
+        <span class="fibo-item fibo-probe" style="margin-right:8px;">Probed Index</span>
+        <span class="fibo-item fibo-found" style="margin-right:8px;">Found</span>
+        <span class="fibo-item fibo-outside" style="margin-right:8px;">Outside Range</span>
+    `;
+    visualization.parentNode.insertBefore(legend, visualization);
+}
+
+document.head.insertAdjacentHTML('beforeend', `<style>
+.fibo-item {
+    display: inline-block;
+    min-width: 2.2em;
+    padding: 0.5em 0.7em;
+    margin: 0 0.2em;
+    border-radius: 6px;
+    background: #e3edff;
+    font-size: 1.1em;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+    vertical-align: bottom;
+}
+.fibo-index {
+    display: block;
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 0.15em;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+.fibo-range {
+    background: #b2e3ff;
+    color: #2a4d8f;
+}
+.fibo-probe {
+    background: #ffb84f;
+    color: #fff;
+    font-weight: bold;
+}
+.fibo-found {
+    background: #4f8cff;
+    color: #fff;
+    font-weight: bold;
+}
+.fibo-outside {
+    opacity: 0.3;
+    background: #e0e0e0;
+    color: #888;
+}
+</style>`);
