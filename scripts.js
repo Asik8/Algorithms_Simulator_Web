@@ -41,6 +41,9 @@ function showSimulator(algo) {
         renderBinarySearchInput();
         renderBinarySearchLegend();
     }
+    if (algo === 'bubble-sort') {
+        renderBubbleSortTheory();
+    }
     // Add more algorithms here
 }
 
@@ -534,3 +537,228 @@ function renderAlgorithmInfo(algo) {
     }
     inputSection.innerHTML = info + inputSection.innerHTML;
 }
+
+// Bubble Sort Theory Section
+function renderBubbleSortTheory() {
+    inputSection.innerHTML = `
+        <div class="algo-info-box">
+            <b>Bubble Sort - Theoretical Knowledge</b><br>
+            <ul style='margin:0.7em 0 0 1.2em;'>
+                <li><b>Definition:</b> Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. This process is repeated until the list is sorted.</li>
+                <li><b>Time Complexity:</b> O(n<sup>2</sup>) &mdash; compares every pair in the worst case.</li>
+                <li><b>Space Complexity:</b> O(1) &mdash; sorts in place.</li>
+                <li><b>Use Cases:</b>
+                    <ul style='margin:0.3em 0 0 1.2em;'>
+                        <li>Educational purposes (easy to understand)</li>
+                        <li>Small or nearly sorted arrays</li>
+                    </ul>
+                </li>
+                <li><b>Example:</b><br>
+                    <span style='display:inline-block;background:#f0f4fa;padding:0.5em 0.8em;border-radius:6px;'>
+                        Array: [<b>5</b>, 1, 4, 2, 8]<br>
+                        Steps (first pass):<br>
+                        Compare 5 & 1 → swap → [1, 5, 4, 2, 8]<br>
+                        Compare 5 & 4 → swap → [1, 4, 5, 2, 8]<br>
+                        Compare 5 & 2 → swap → [1, 4, 2, 5, 8]<br>
+                        Compare 5 & 8 → no swap → [1, 4, 2, 5, 8]<br>
+                        Largest element (8) is now at the end.
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <button id="bsort-start-sim-btn" style="margin-bottom:1.2em;">Start Simulation</button>
+    `;
+    document.getElementById('bsort-start-sim-btn').onclick = function() {
+        renderBubbleSortInputForm();
+    };
+}
+
+function renderBubbleSortInputForm() {
+    inputSection.innerHTML = `
+        <form id="bsort-form">
+            <label>Enter array (comma separated):<br>
+                <input type="text" id="bsort-array" required placeholder="e.g. 5, 1, 4, 2, 8">
+            </label><br><br>
+            <button type="submit">Simulate</button>
+        </form>
+    `;
+    $('#bsort-form').onsubmit = handleBubbleSortInput;
+}
+
+let bubbleSortSteps = [];
+let bubbleSortStep = 0;
+
+function handleBubbleSortInput(e) {
+    e.preventDefault();
+    const arrStr = $('#bsort-array').value.trim();
+    if (!arrStr) return;
+    const arr = arrStr.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n));
+    if (arr.length === 0) {
+        alert('Please enter a valid array.');
+        return;
+    }
+    bubbleSortSteps = buildBubbleSortSteps(arr);
+    bubbleSortStep = 0;
+    inputSection.innerHTML = '';
+    renderBubbleSortLegend();
+    updateBubbleSortStep();
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+}
+
+function buildBubbleSortSteps(arr) {
+    const steps = [];
+    let a = arr.slice();
+    let n = a.length;
+    let sortedUpto = n;
+    let swapped;
+    for (let i = 0; i < n - 1; i++) {
+        swapped = false;
+        for (let j = 0; j < n - i - 1; j++) {
+            let step = {
+                arr: a.slice(),
+                i,
+                j,
+                compared: [j, j + 1],
+                swapped: false,
+                sortedUpto: n - i,
+                done: false
+            };
+            if (a[j] > a[j + 1]) {
+                [a[j], a[j + 1]] = [a[j + 1], a[j]];
+                step.swapped = true;
+                swapped = true;
+            }
+            steps.push(step);
+        }
+        // Mark the last element as sorted
+        steps.push({
+            arr: a.slice(),
+            i,
+            j: null,
+            compared: [],
+            swapped: false,
+            sortedUpto: n - i,
+            done: false
+        });
+        if (!swapped) break;
+    }
+    // Final sorted state
+    steps.push({
+        arr: a.slice(),
+        i: null,
+        j: null,
+        compared: [],
+        swapped: false,
+        sortedUpto: 0,
+        done: true
+    });
+    return steps;
+}
+
+function updateBubbleSortStep() {
+    if (!bubbleSortSteps.length) return;
+    const step = bubbleSortSteps[bubbleSortStep];
+    // Visualization
+    visualization.innerHTML = step.arr.map((num, idx) => {
+        let cls = '';
+        if (step.compared.includes(idx)) cls = 'bsort-compared';
+        if (step.swapped && step.compared.includes(idx)) cls = 'bsort-swapped';
+        if (step.sortedUpto && idx >= step.sortedUpto) cls = 'bsort-sorted';
+        return `<span class="bsort-item ${cls}">
+            <div>${num}</div>
+            <div class="bsort-index">${idx}</div>
+        </span>`;
+    }).join(' ');
+    // Explanation
+    if (step.done) {
+        explanation.innerHTML = `<b>Array is fully sorted!</b>`;
+    } else if (step.compared.length) {
+        let msg = `Comparing <b>${step.arr[step.compared[0]]}</b> (index ${step.compared[0]}) and <b>${step.arr[step.compared[1]]}</b> (index ${step.compared[1]}).`;
+        if (step.swapped) {
+            msg += ` They are swapped because ${step.arr[step.compared[0]]} > ${step.arr[step.compared[1]]}.`;
+        } else {
+            msg += ` No swap needed.`;
+        }
+        explanation.innerHTML = msg;
+    } else {
+        explanation.innerHTML = `End of pass ${step.i + 1}. The largest unsorted element is now in place.`;
+    }
+    // Button states
+    prevBtn.disabled = bubbleSortStep === 0;
+    nextBtn.disabled = bubbleSortStep === bubbleSortSteps.length - 1;
+}
+
+// Step navigation for Bubble Sort
+const origPrevBubble = prevBtn.onclick;
+const origNextBubble = nextBtn.onclick;
+prevBtn.onclick = function() {
+    if (currentAlgo === 'bubble-sort') {
+        if (bubbleSortStep > 0) {
+            bubbleSortStep--;
+            updateBubbleSortStep();
+        }
+    } else if (origPrevBubble) {
+        origPrevBubble();
+    }
+};
+nextBtn.onclick = function() {
+    if (currentAlgo === 'bubble-sort') {
+        if (bubbleSortStep < bubbleSortSteps.length - 1) {
+            bubbleSortStep++;
+            updateBubbleSortStep();
+        }
+    } else if (origNextBubble) {
+        origNextBubble();
+    }
+};
+
+function renderBubbleSortLegend() {
+    const legend = document.createElement('div');
+    legend.id = 'bsort-legend';
+    legend.style.margin = '0.5rem 0 1rem 0';
+    legend.innerHTML = `
+        <span class="bsort-item bsort-compared" style="margin-right:8px;">Compared</span>
+        <span class="bsort-item bsort-swapped" style="margin-right:8px;">Swapped</span>
+        <span class="bsort-item bsort-sorted" style="margin-right:8px;">Sorted</span>
+    `;
+    visualization.parentNode.insertBefore(legend, visualization);
+}
+
+document.head.insertAdjacentHTML('beforeend', `<style>
+.bsort-item {
+    display: inline-block;
+    min-width: 2.2em;
+    padding: 0.5em 0.7em;
+    margin: 0 0.2em;
+    border-radius: 6px;
+    background: #e3edff;
+    font-size: 1.1em;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+    vertical-align: bottom;
+}
+.bsort-index {
+    display: block;
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 0.15em;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+.bsort-compared {
+    background: #ffb84f;
+    color: #fff;
+    font-weight: bold;
+}
+.bsort-swapped {
+    background: #e53935;
+    color: #fff;
+    font-weight: bold;
+}
+.bsort-sorted {
+    background: #4f8cff;
+    color: #fff;
+    font-weight: bold;
+}
+</style>`);
