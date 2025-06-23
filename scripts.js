@@ -50,6 +50,9 @@ function showSimulator(algo) {
     if (algo === 'hashing') {
         renderHashingTheory();
     }
+    if (algo === 'radix-sort') {
+        renderRadixSortTheory();
+    }
     // Add more algorithms here
 }
 
@@ -1911,5 +1914,374 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     background: #e0e0e0;
     color: #888;
     opacity: 0.5;
+}
+</style>`);
+
+// Radix Sort Theory Section
+function renderRadixSortTheory() {
+    inputSection.innerHTML = `
+        <div class="algo-info-box">
+            <b>Radix Sort - Theoretical Knowledge</b><br>
+            <ul style='margin:0.7em 0 0 1.2em;'>
+                <li><b>Definition:</b> Radix Sort is a non-comparative sorting algorithm that sorts numbers by processing individual digits from least significant to most significant.</li>
+                <li><b>Time Complexity:</b> O(d(n + k)), where d is the number of digits, n is the number of elements, and k is the range of digits (usually 10 for base-10).</li>
+                <li><b>Space Complexity:</b> O(n + k)</li>
+                <li><b>Use Cases:</b>
+                    <ul style='margin:0.3em 0 0 1.2em;'>
+                        <li>Sorting large numbers of integers</li>
+                        <li>When keys are uniformly distributed and not too large</li>
+                    </ul>
+                </li>
+                <li><b>Example:</b><br>
+                    <span style='display:inline-block;background:#f0f4fa;padding:0.5em 0.8em;border-radius:6px;'>
+                        Array: [170, 45, 75, 90, 802, 24, 2, 66]<br>
+                        Pass 1 (unit place): [170, 90, 802, 2, 24, 45, 75, 66]<br>
+                        Pass 2 (tens place): [802, 2, 24, 45, 66, 170, 75, 90]<br>
+                        Pass 3 (hundreds place): [2, 24, 45, 66, 75, 90, 170, 802]
+                    </span>
+                </li>
+            </ul>
+            <div class="algo-code-examples">
+                <b>Radix Sort Code Examples:</b>
+                <div class="code-lang-tabs">
+                    <button class="code-lang-tab active" data-lang="c">C</button>
+                    <button class="code-lang-tab" data-lang="cpp">C++</button>
+                    <button class="code-lang-tab" data-lang="python">Python</button>
+                    <button class="code-lang-tab" data-lang="js">JavaScript</button>
+                    <button class="code-lang-tab" data-lang="java">Java</button>
+                </div>
+                <div class="code-tab-content">
+                    <pre class="code-block" data-lang="c"><code>// C
+// Function to get maximum value in arr[]
+int getMax(int arr[], int n) {
+    int mx = arr[0];
+    for (int i = 1; i < n; i++)
+        if (arr[i] > mx)
+            mx = arr[i];
+    return mx;
+}
+// A function to do counting sort of arr[] according to the digit represented by exp
+void countSort(int arr[], int n, int exp) {
+    int output[n];
+    int i, count[10] = {0};
+    for (i = 0; i < n; i++)
+        count[(arr[i] / exp) % 10]++;
+    for (i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+    for (i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+    for (i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+// The main function to that sorts arr[] of size n using Radix Sort
+void radixSort(int arr[], int n) {
+    int m = getMax(arr, n);
+    for (int exp = 1; m / exp > 0; exp *= 10)
+        countSort(arr, n, exp);
+}</code></pre>
+                    <pre class="code-block" data-lang="cpp" style="display:none"><code>// C++
+#include <vector>
+using namespace std;
+// Function to get maximum value in arr[]
+int getMax(vector<int>& arr) {
+    int mx = arr[0];
+    for (int i = 1; i < arr.size(); i++)
+        if (arr[i] > mx)
+            mx = arr[i];
+    return mx;
+}
+void countSort(vector<int>& arr, int exp) {
+    int n = arr.size();
+    vector<int> output(n);
+    int count[10] = {0};
+    for (int i = 0; i < n; i++)
+        count[(arr[i] / exp) % 10]++;
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+void radixSort(vector<int>& arr) {
+    int m = getMax(arr);
+    for (int exp = 1; m / exp > 0; exp *= 10)
+        countSort(arr, exp);
+}</code></pre>
+                    <pre class="code-block" data-lang="python" style="display:none"><code># Python
+# Function to do counting sort of arr[] according to the digit represented by exp
+def counting_sort(arr, exp):
+    n = len(arr)
+    output = [0] * n
+    count = [0] * 10
+    for i in range(n):
+        index = (arr[i] // exp) % 10
+        count[index] += 1
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+    for i in range(n - 1, -1, -1):
+        index = (arr[i] // exp) % 10
+        output[count[index] - 1] = arr[i]
+        count[index] -= 1
+    for i in range(n):
+        arr[i] = output[i]
+# Main function to implement radix sort
+def radix_sort(arr):
+    max1 = max(arr)
+    exp = 1
+    while max1 // exp > 0:
+        counting_sort(arr, exp)
+        exp *= 10</code></pre>
+                    <pre class="code-block" data-lang="js" style="display:none"><code>// JavaScript
+// Function to do counting sort of arr[] according to the digit represented by exp
+function countingSort(arr, exp) {
+    let n = arr.length;
+    let output = new Array(n).fill(0);
+    let count = new Array(10).fill(0);
+    for (let i = 0; i < n; i++)
+        count[Math.floor(arr[i] / exp) % 10]++;
+    for (let i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+    for (let i = n - 1; i >= 0; i--) {
+        let index = Math.floor(arr[i] / exp) % 10;
+        output[count[index] - 1] = arr[i];
+        count[index]--;
+    }
+    for (let i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+// Main function to implement radix sort
+function radixSort(arr) {
+    let max = Math.max(...arr);
+    for (let exp = 1; Math.floor(max / exp) > 0; exp *= 10)
+        countingSort(arr, exp);
+}</code></pre>
+                    <pre class="code-block" data-lang="java" style="display:none"><code>// Java
+// Function to get maximum value in arr[]
+int getMax(int arr[]) {
+    int mx = arr[0];
+    for (int i = 1; i < arr.length; i++)
+        if (arr[i] > mx)
+            mx = arr[i];
+    return mx;
+}
+// Function to do counting sort of arr[] according to the digit represented by exp
+void countSort(int arr[], int exp) {
+    int n = arr.length;
+    int output[] = new int[n];
+    int count[] = new int[10];
+    for (int i = 0; i < n; i++)
+        count[(arr[i] / exp) % 10]++;
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(arr[i] / exp) % 10] - 1] = arr[i];
+        count[(arr[i] / exp) % 10]--;
+    }
+    for (int i = 0; i < n; i++)
+        arr[i] = output[i];
+}
+// Main function to implement radix sort
+void radixSort(int arr[]) {
+    int m = getMax(arr);
+    for (int exp = 1; m / exp > 0; exp *= 10)
+        countSort(arr, exp);
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <button id="radix-start-sim-btn" class="center-sim-btn">Start Simulation</button>
+    `;
+    // Tab switching logic
+    const tabBtns = inputSection.querySelectorAll('.code-lang-tab');
+    const codeBlocks = inputSection.querySelectorAll('.code-block');
+    tabBtns.forEach(btn => {
+        btn.onclick = function() {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const lang = btn.getAttribute('data-lang');
+            codeBlocks.forEach(cb => {
+                if (cb.getAttribute('data-lang') === lang) {
+                    cb.style.display = '';
+                } else {
+                    cb.style.display = 'none';
+                }
+            });
+        };
+    });
+    document.getElementById('radix-start-sim-btn').onclick = function() {
+        renderRadixSortInputForm();
+    };
+}
+
+function renderRadixSortInputForm() {
+    inputSection.innerHTML = `
+        <form id="radix-form">
+            <label>Enter array (comma separated):<br>
+                <input type="text" id="radix-array" required placeholder="e.g. 170, 45, 75, 90, 802, 24, 2, 66">
+            </label><br><br>
+            <button type="submit">Simulate</button>
+        </form>
+    `;
+    $('#radix-form').onsubmit = handleRadixSortInput;
+}
+
+let radixSortSteps = [];
+let radixSortStep = 0;
+
+function handleRadixSortInput(e) {
+    e.preventDefault();
+    const arrStr = $('#radix-array').value.trim();
+    if (!arrStr) return;
+    const arr = arrStr.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n));
+    if (arr.length === 0) {
+        alert('Please enter a valid array.');
+        return;
+    }
+    radixSortSteps = buildRadixSortSteps(arr);
+    radixSortStep = 0;
+    inputSection.innerHTML = '';
+    renderRadixSortLegend();
+    updateRadixSortStep();
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+}
+
+function buildRadixSortSteps(arr) {
+    // We'll simulate the steps of radix sort (LSD, base 10)
+    let steps = [];
+    let a = arr.slice();
+    let max = Math.max(...a);
+    let exp = 1;
+    while (Math.floor(max / exp) > 0) {
+        // Counting sort for this digit
+        let output = new Array(a.length);
+        let count = new Array(10).fill(0);
+        for (let i = 0; i < a.length; i++)
+            count[Math.floor(a[i] / exp) % 10]++;
+        for (let i = 1; i < 10; i++)
+            count[i] += count[i - 1];
+        for (let i = a.length - 1; i >= 0; i--) {
+            let digit = Math.floor(a[i] / exp) % 10;
+            output[count[digit] - 1] = a[i];
+            count[digit]--;
+        }
+        // Save step: show the array, the digit, and the buckets
+        steps.push({
+            arr: a.slice(),
+            exp,
+            digitBuckets: count.slice(),
+            output: output.slice(),
+            phase: 'sort',
+        });
+        // Copy output to a for next pass
+        for (let i = 0; i < a.length; i++)
+            a[i] = output[i];
+        exp *= 10;
+    }
+    // Final sorted state
+    steps.push({
+        arr: a.slice(),
+        exp: null,
+        digitBuckets: null,
+        output: null,
+        phase: 'done',
+    });
+    return steps;
+}
+
+function updateRadixSortStep() {
+    if (!radixSortSteps.length) return;
+    const step = radixSortSteps[radixSortStep];
+    // Visualization
+    visualization.innerHTML = step.arr.map((num, idx) => {
+        let cls = '';
+        if (step.phase === 'done') cls = 'radix-sorted';
+        else if (step.phase === 'sort') cls = 'radix-current';
+        return `<span class="radix-item ${cls}">
+            <div>${num}</div>
+            <div class="radix-index">${idx}</div>
+        </span>`;
+    }).join(' ');
+    // Explanation
+    if (step.phase === 'done') {
+        explanation.innerHTML = `<b>Array is fully sorted!</b>`;
+    } else {
+        explanation.innerHTML = `Sorting by digit place <b>${step.exp}</b> (1=units, 10=tens, 100=hundreds, ...).`;
+    }
+    // Button states
+    prevBtn.disabled = radixSortStep === 0;
+    nextBtn.disabled = radixSortStep === radixSortSteps.length - 1;
+}
+
+// Step navigation for Radix Sort
+const origPrevRadix = prevBtn.onclick;
+const origNextRadix = nextBtn.onclick;
+prevBtn.onclick = function() {
+    if (currentAlgo === 'radix-sort') {
+        if (radixSortStep > 0) {
+            radixSortStep--;
+            updateRadixSortStep();
+        }
+    } else if (origPrevRadix) {
+        origPrevRadix();
+    }
+};
+nextBtn.onclick = function() {
+    if (currentAlgo === 'radix-sort') {
+        if (radixSortStep < radixSortSteps.length - 1) {
+            radixSortStep++;
+            updateRadixSortStep();
+        }
+    } else if (origNextRadix) {
+        origNextRadix();
+    }
+};
+
+function renderRadixSortLegend() {
+    const legend = document.createElement('div');
+    legend.id = 'radix-legend';
+    legend.style.margin = '0.5rem 0 1rem 0';
+    legend.innerHTML = `
+        <span class="radix-item radix-current" style="margin-right:8px;">Current Pass</span>
+        <span class="radix-item radix-sorted" style="margin-right:8px;">Sorted</span>
+    `;
+    visualization.parentNode.insertBefore(legend, visualization);
+}
+
+document.head.insertAdjacentHTML('beforeend', `<style>
+.radix-item {
+    display: inline-block;
+    min-width: 2.2em;
+    padding: 0.5em 0.7em;
+    margin: 0 0.2em;
+    border-radius: 6px;
+    background: #e3edff;
+    font-size: 1.1em;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+    vertical-align: bottom;
+}
+.radix-index {
+    display: block;
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 0.15em;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+.radix-current {
+    background: #ffb84f;
+    color: #fff;
+    font-weight: bold;
+}
+.radix-sorted {
+    background: #4f8cff;
+    color: #fff;
+    font-weight: bold;
 }
 </style>`);
