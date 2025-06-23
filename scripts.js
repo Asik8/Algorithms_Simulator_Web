@@ -55,7 +55,45 @@ function algoToTitle(algo) {
 
 // Render input fields for Linear Search
 function renderLinearSearchInput() {
-    renderAlgorithmInfo('linear-search');
+    renderLinearSearchTheory();
+}
+
+// Show linear search theory, complexities, use cases, and example before input fields
+function renderLinearSearchTheory() {
+    inputSection.innerHTML = `
+        <div class="algo-info-box">
+            <b>Linear Search - Theoretical Knowledge</b><br>
+            <ul style='margin:0.7em 0 0 1.2em;'>
+                <li><b>Definition:</b> Linear Search checks each element in the array one by one to find the target value.</li>
+                <li><b>Time Complexity:</b> O(n) &mdash; may need to check every element.</li>
+                <li><b>Space Complexity:</b> O(1) &mdash; only a few variables are used.</li>
+                <li><b>Use Cases:</b>
+                    <ul style='margin:0.3em 0 0 1.2em;'>
+                        <li>Searching in small or unsorted arrays</li>
+                        <li>When the array is not sorted</li>
+                        <li>Checking for the presence of a value in a list</li>
+                    </ul>
+                </li>
+                <li><b>Example:</b><br>
+                    <span style='display:inline-block;background:#f0f4fa;padding:0.5em 0.8em;border-radius:6px;'>
+                        Array: [<b>4</b>, 2, 7, 1, 9]<br>
+                        Target: <b>7</b><br>
+                        Steps:<br>
+                        1. index=0, arr[0]=4. 4 ≠ 7.<br>
+                        2. index=1, arr[1]=2. 2 ≠ 7.<br>
+                        3. index=2, arr[2]=7. 7 == 7, found at index 2.
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <button id="ls-start-sim-btn" style="margin-bottom:1.2em;">Start Simulation</button>
+    `;
+    document.getElementById('ls-start-sim-btn').onclick = function() {
+        renderLinearSearchInputForm();
+    };
+}
+
+function renderLinearSearchInputForm() {
     inputSection.innerHTML = `
         <form id="ls-form">
             <label>Enter array (comma separated):<br>
@@ -64,7 +102,7 @@ function renderLinearSearchInput() {
             <label>Number to search:<br>
                 <input type="number" id="ls-target" required placeholder="e.g. 8">
             </label><br><br>
-            <button type="submit">Start Simulation</button>
+            <button type="submit">Simulate</button>
         </form>
     `;
     $('#ls-form').onsubmit = handleLinearSearchInput;
@@ -126,7 +164,10 @@ function updateLinearSearchStep() {
         let cls = '';
         if (idx === step.index && !step.done) cls = 'current';
         if (idx === step.index && step.found) cls = 'found';
-        return `<span class="ls-item ${cls}">${num}</span>`;
+        return `<span class="ls-item ${cls}">
+            <div>${num}</div>
+            <div class="ls-index">${idx}</div>
+        </span>`;
     }).join(' ');
     // Explanation
     if (step.index >= step.arr.length) {
@@ -377,6 +418,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     background: #e3edff;
     font-size: 1.1em;
     transition: background 0.2s, color 0.2s;
+    position: relative;
+    vertical-align: bottom;
 }
 .ls-item.current {
     background: #ffb84f;
@@ -441,6 +484,14 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     margin-bottom: 1em;
     color: #2a4d8f;
     font-size: 1.02em;
+}
+.ls-index {
+    display: block;
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 0.15em;
+    text-align: center;
+    letter-spacing: 0.5px;
 }
 </style>`);
 
