@@ -210,3 +210,8 @@ footer {
     transform: scale(1.045);
     box-shadow: 0 6px 24px rgba(79,140,255,0.16);
 }
+
+.algo-info-box span[style*='background:#f0f4fa'] {
+    display: inline-block;
+    margin-top: 1.1em;
+}
