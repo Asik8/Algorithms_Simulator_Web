@@ -47,6 +47,9 @@ function showSimulator(algo) {
     if (algo === 'fibonacci-search') {
         renderFibonacciSearchTheory();
     }
+    if (algo === 'hashing') {
+        renderHashingTheory();
+    }
     // Add more algorithms here
 }
 
@@ -1175,7 +1178,7 @@ int fibonacciSearch(vector<int>& arr, int target) {
     return -1;
 }</code></pre>
                     <pre class="code-block" data-lang="python" style="display:none"><code># Python
-# Function to perform Fibonacci Search
+// Function to perform Fibonacci Search
 def fibonacci_search(arr, target):
     n = len(arr)
     fibMMm2 = 0  # (m-2)'th Fibonacci No.
@@ -1496,5 +1499,417 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     opacity: 0.3;
     background: #e0e0e0;
     color: #888;
+}
+</style>`);
+
+// Hashing (Hash Table Lookup) Theory Section
+function renderHashingTheory() {
+    inputSection.innerHTML = `
+        <div class="algo-info-box">
+            <b>Hashing (Hash Table Lookup) - Theoretical Knowledge</b><br>
+            <ul style='margin:0.7em 0 0 1.2em;'>
+                <li><b>Definition:</b> Hashing is a technique to map data (keys) to a fixed-size table (hash table) using a hash function. Lookup is done in constant time on average.</li>
+                <li><b>Time Complexity:</b> O(1) average, O(n) worst-case (with collisions)</li>
+                <li><b>Space Complexity:</b> O(n)</li>
+                <li><b>Use Cases:</b>
+                    <ul style='margin:0.3em 0 0 1.2em;'>
+                        <li>Fast lookups (dictionaries, sets, caches)</li>
+                        <li>Database indexing</li>
+                        <li>Symbol tables in compilers</li>
+                    </ul>
+                </li>
+                <li><b>Example:</b><br>
+                    <span style='display:inline-block;background:#f0f4fa;padding:0.5em 0.8em;border-radius:6px;'>
+                        Keys: [15, 11, 27, 8, 12]<br>
+                        Hash table size: 7<br>
+                        Hash function: key % 7<br>
+                        Insert 15: 15 % 7 = 1 → table[1] = 15<br>
+                        Insert 11: 11 % 7 = 4 → table[4] = 11<br>
+                        Insert 27: 27 % 7 = 6 → table[6] = 27<br>
+                        Insert 8: 8 % 7 = 1 (collision) → linear probe to next empty slot (table[2] = 8)<br>
+                        Insert 12: 12 % 7 = 5 → table[5] = 12
+                    </span>
+                </li>
+            </ul>
+            <div class="algo-code-examples">
+                <b>Hash Table Lookup Code Examples:</b>
+                <div class="code-lang-tabs">
+                    <button class="code-lang-tab active" data-lang="c">C</button>
+                    <button class="code-lang-tab" data-lang="cpp">C++</button>
+                    <button class="code-lang-tab" data-lang="python">Python</button>
+                    <button class="code-lang-tab" data-lang="js">JavaScript</button>
+                    <button class="code-lang-tab" data-lang="java">Java</button>
+                </div>
+                <div class="code-tab-content">
+                    <pre class="code-block" data-lang="c"><code>// C
+// Simple hash table with linear probing
+#define SIZE 7
+int table[SIZE];
+void insert(int key) {
+    int idx = key % SIZE;
+    while (table[idx] != 0) // 0 means empty
+        idx = (idx + 1) % SIZE;
+    table[idx] = key;
+}
+int search(int key) {
+    int idx = key % SIZE;
+    int start = idx;
+    while (table[idx] != 0) {
+        if (table[idx] == key) return idx;
+        idx = (idx + 1) % SIZE;
+        if (idx == start) break;
+    }
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="cpp" style="display:none"><code>// C++
+// Simple hash table with linear probing
+#define SIZE 7
+int table[SIZE] = {0};
+void insert(int key) {
+    int idx = key % SIZE;
+    while (table[idx] != 0)
+        idx = (idx + 1) % SIZE;
+    table[idx] = key;
+}
+int search(int key) {
+    int idx = key % SIZE;
+    int start = idx;
+    while (table[idx] != 0) {
+        if (table[idx] == key) return idx;
+        idx = (idx + 1) % SIZE;
+        if (idx == start) break;
+    }
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="python" style="display:none"><code># Python
+// Simple hash table with linear probing
+SIZE = 7
+table = [None] * SIZE
+def insert(key):
+    idx = key % SIZE
+    while table[idx] is not None:
+        idx = (idx + 1) % SIZE
+    table[idx] = key
+def search(key):
+    idx = key % SIZE
+    start = idx
+    while table[idx] is not None:
+        if table[idx] == key:
+            return idx
+        idx = (idx + 1) % SIZE
+        if idx == start:
+            break
+    return -1</code></pre>
+                    <pre class="code-block" data-lang="js" style="display:none"><code>// JavaScript
+// Simple hash table with linear probing
+const SIZE = 7;
+const table = Array(SIZE).fill(null);
+function insert(key) {
+    let idx = key % SIZE;
+    while (table[idx] !== null) {
+        idx = (idx + 1) % SIZE;
+    }
+    table[idx] = key;
+}
+function search(key) {
+    let idx = key % SIZE;
+    const start = idx;
+    while (table[idx] !== null) {
+        if (table[idx] === key) return idx;
+        idx = (idx + 1) % SIZE;
+        if (idx === start) break;
+    }
+    return -1;
+}</code></pre>
+                    <pre class="code-block" data-lang="java" style="display:none"><code>// Java
+// Simple hash table with linear probing
+class HashTable {
+    static final int SIZE = 7;
+    int[] table = new int[SIZE];
+    void insert(int key) {
+        int idx = key % SIZE;
+        while (table[idx] != 0)
+            idx = (idx + 1) % SIZE;
+        table[idx] = key;
+    }
+    int search(int key) {
+        int idx = key % SIZE;
+        int start = idx;
+        while (table[idx] != 0) {
+            if (table[idx] == key) return idx;
+            idx = (idx + 1) % SIZE;
+            if (idx == start) break;
+        }
+        return -1;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+        <button id="hashing-start-sim-btn" class="center-sim-btn">Start Simulation</button>
+    `;
+    // Tab switching logic
+    const tabBtns = inputSection.querySelectorAll('.code-lang-tab');
+    const codeBlocks = inputSection.querySelectorAll('.code-block');
+    tabBtns.forEach(btn => {
+        btn.onclick = function() {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const lang = btn.getAttribute('data-lang');
+            codeBlocks.forEach(cb => {
+                if (cb.getAttribute('data-lang') === lang) {
+                    cb.style.display = '';
+                } else {
+                    cb.style.display = 'none';
+                }
+            });
+        };
+    });
+    document.getElementById('hashing-start-sim-btn').onclick = function() {
+        renderHashingInputForm();
+    };
+}
+
+function renderHashingInputForm() {
+    inputSection.innerHTML = `
+        <form id="hashing-form">
+            <label>Enter keys to insert (comma separated):<br>
+                <input type="text" id="hashing-keys" required placeholder="e.g. 15, 11, 27, 8, 12">
+            </label><br><br>
+            <label>Key to look up:<br>
+                <input type="number" id="hashing-target" required placeholder="e.g. 27">
+            </label><br><br>
+            <button type="submit">Simulate</button>
+        </form>
+    `;
+    $('#hashing-form').onsubmit = handleHashingInput;
+}
+
+let hashingSteps = [];
+let hashingStep = 0;
+
+function handleHashingInput(e) {
+    e.preventDefault();
+    const keysStr = $('#hashing-keys').value.trim();
+    const targetStr = $('#hashing-target').value.trim();
+    if (!keysStr || !targetStr) return;
+    const keys = keysStr.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n));
+    const target = Number(targetStr);
+    if (keys.length === 0 || isNaN(target)) {
+        alert('Please enter valid keys and a target number.');
+        return;
+    }
+    hashingSteps = buildHashingSteps(keys, target);
+    hashingStep = 0;
+    inputSection.innerHTML = '';
+    renderHashingLegend();
+    updateHashingStep();
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+}
+
+function buildHashingSteps(keys, target) {
+    const SIZE = 7;
+    let table = Array(SIZE).fill(null);
+    const steps = [];
+    // Insert phase
+    for (let k = 0; k < keys.length; k++) {
+        let key = keys[k];
+        let idx = key % SIZE;
+        let probe = 0;
+        let inserted = false;
+        while (table[idx] !== null && probe < SIZE) {
+            steps.push({
+                table: table.slice(),
+                idx,
+                key,
+                phase: 'insert',
+                inserted: false,
+                probe,
+                highlight: idx,
+                keys: keys.slice(0, k),
+            });
+            idx = (idx + 1) % SIZE;
+            probe++;
+        }
+        table[idx] = key;
+        steps.push({
+            table: table.slice(),
+            idx,
+            key,
+            phase: 'insert',
+            inserted: true,
+            probe,
+            highlight: idx,
+            keys: keys.slice(0, k+1),
+        });
+    }
+    // Lookup phase
+    let idx = target % SIZE;
+    let probe = 0;
+    let found = false;
+    let start = idx;
+    while (table[idx] !== null && probe < SIZE) {
+        steps.push({
+            table: table.slice(),
+            idx,
+            key: target,
+            phase: 'lookup',
+            found: table[idx] === target,
+            probe,
+            highlight: idx,
+            keys,
+        });
+        if (table[idx] === target) {
+            found = true;
+            break;
+        }
+        idx = (idx + 1) % SIZE;
+        probe++;
+        if (idx === start) break;
+    }
+    if (!found) {
+        steps.push({
+            table: table.slice(),
+            idx,
+            key: target,
+            phase: 'lookup',
+            found: false,
+            probe,
+            highlight: idx,
+            keys,
+        });
+    }
+    return steps;
+}
+
+function updateHashingStep() {
+    if (!hashingSteps.length) return;
+    const step = hashingSteps[hashingStep];
+    visualization.innerHTML = step.table.map((val, idx) => {
+        let cls = '';
+        if (step.phase === 'insert' && idx === step.highlight) {
+            cls = step.inserted ? 'hash-inserted' : 'hash-probe';
+        } else if (step.phase === 'lookup' && idx === step.highlight) {
+            cls = step.found ? 'hash-found' : 'hash-lookup';
+        } else if (val !== null) {
+            cls = 'hash-filled';
+        } else {
+            cls = 'hash-empty';
+        }
+        return `<span class="hash-item ${cls}">
+            <div>${val !== null ? val : ''}</div>
+            <div class="hash-index">${idx}</div>
+        </span>`;
+    }).join(' ');
+    // Explanation
+    if (step.phase === 'insert') {
+        if (step.inserted) {
+            explanation.innerHTML = `Inserted <b>${step.key}</b> at index <b>${step.idx}</b> (after ${step.probe} probe${step.probe === 1 ? '' : 's'}).`;
+        } else {
+            explanation.innerHTML = `Collision at index <b>${step.idx}</b> for key <b>${step.key}</b>. Probing next slot...`;
+        }
+    } else if (step.phase === 'lookup') {
+        if (step.found) {
+            explanation.innerHTML = `Key <b>${step.key}</b> found at index <b>${step.idx}</b> after ${step.probe} probe${step.probe === 1 ? '' : 's'}.`;
+        } else if (step.table[step.idx] === null) {
+            explanation.innerHTML = `Key <b>${step.key}</b> not found. Slot <b>${step.idx}</b> is empty.`;
+        } else {
+            explanation.innerHTML = `Checking index <b>${step.idx}</b>... not a match, probing next slot.`;
+        }
+    }
+    // Button states
+    prevBtn.disabled = hashingStep === 0;
+    nextBtn.disabled = hashingStep === hashingSteps.length - 1;
+}
+
+// Step navigation for Hashing
+const origPrevHash = prevBtn.onclick;
+const origNextHash = nextBtn.onclick;
+prevBtn.onclick = function() {
+    if (currentAlgo === 'hashing') {
+        if (hashingStep > 0) {
+            hashingStep--;
+            updateHashingStep();
+        }
+    } else if (origPrevHash) {
+        origPrevHash();
+    }
+};
+nextBtn.onclick = function() {
+    if (currentAlgo === 'hashing') {
+        if (hashingStep < hashingSteps.length - 1) {
+            hashingStep++;
+            updateHashingStep();
+        }
+    } else if (origNextHash) {
+        origNextHash();
+    }
+};
+
+function renderHashingLegend() {
+    const legend = document.createElement('div');
+    legend.id = 'hashing-legend';
+    legend.style.margin = '0.5rem 0 1rem 0';
+    legend.innerHTML = `
+        <span class="hash-item hash-inserted" style="margin-right:8px;">Inserted</span>
+        <span class="hash-item hash-probe" style="margin-right:8px;">Probing</span>
+        <span class="hash-item hash-lookup" style="margin-right:8px;">Lookup</span>
+        <span class="hash-item hash-found" style="margin-right:8px;">Found</span>
+        <span class="hash-item hash-filled" style="margin-right:8px;">Filled</span>
+        <span class="hash-item hash-empty" style="margin-right:8px;">Empty</span>
+    `;
+    visualization.parentNode.insertBefore(legend, visualization);
+}
+
+document.head.insertAdjacentHTML('beforeend', `<style>
+.hash-item {
+    display: inline-block;
+    min-width: 2.2em;
+    padding: 0.5em 0.7em;
+    margin: 0 0.2em;
+    border-radius: 6px;
+    background: #e3edff;
+    font-size: 1.1em;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+    vertical-align: bottom;
+}
+.hash-index {
+    display: block;
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 0.15em;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+.hash-inserted {
+    background: #4f8cff;
+    color: #fff;
+    font-weight: bold;
+}
+.hash-probe {
+    background: #ffb84f;
+    color: #fff;
+    font-weight: bold;
+}
+.hash-lookup {
+    background: #ffe066;
+    color: #2a4d8f;
+    font-weight: bold;
+}
+.hash-found {
+    background: #4caf50;
+    color: #fff;
+    font-weight: bold;
+}
+.hash-filled {
+    background: #b2e3ff;
+    color: #2a4d8f;
+}
+.hash-empty {
+    background: #e0e0e0;
+    color: #888;
+    opacity: 0.5;
 }
 </style>`);
