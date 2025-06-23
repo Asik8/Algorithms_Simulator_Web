@@ -15,6 +15,8 @@ let currentAlgo = null;
 let steps = [];
 let currentStep = 0;
 
+const legendId = 'bs-legend';
+
 // Show simulator for selected algorithm
 function showSimulator(algo) {
     currentAlgo = algo;
@@ -26,10 +28,18 @@ function showSimulator(algo) {
     explanation.innerHTML = '';
     prevBtn.disabled = true;
     nextBtn.disabled = true;
-    backBtn.classList.add('hidden');
+    backBtn.classList.remove('hidden');
+
+    // Remove any previous legend
+    const oldLegend = document.getElementById(legendId);
+    if (oldLegend) oldLegend.remove();
 
     if (algo === 'linear-search') {
         renderLinearSearchInput();
+    }
+    if (algo === 'binary-search') {
+        renderBinarySearchInput();
+        renderBinarySearchLegend();
     }
     // Add more algorithms here
 }
@@ -45,6 +55,7 @@ function algoToTitle(algo) {
 
 // Render input fields for Linear Search
 function renderLinearSearchInput() {
+    renderAlgorithmInfo('linear-search');
     inputSection.innerHTML = `
         <form id="ls-form">
             <label>Enter array (comma separated):<br>
@@ -153,6 +164,8 @@ backBtn.onclick = function() {
     explanation.innerHTML = '';
     steps = [];
     currentStep = 0;
+    const oldLegend = document.getElementById(legendId);
+    if (oldLegend) oldLegend.remove();
 };
 
 // Algorithm selection
@@ -161,6 +174,197 @@ backBtn.onclick = function() {
         showSimulator(btn.dataset.algo);
     });
 });
+
+// Render input fields for Binary Search
+function renderBinarySearchInput() {
+    renderBinarySearchTheory();
+}
+
+// Show binary search theory, complexities, use cases, and example before input fields
+function renderBinarySearchTheory() {
+    inputSection.innerHTML = `
+        <div class="algo-info-box">
+            <b>Binary Search - Theoretical Knowledge</b><br>
+            <ul style='margin:0.7em 0 0 1.2em;'>
+                <li><b>Definition:</b> Binary Search is a fast algorithm to find a value in a <b>sorted</b> array by repeatedly dividing the search interval in half.</li>
+                <li><b>Time Complexity:</b> O(log n) &mdash; halves the search space each step.</li>
+                <li><b>Space Complexity:</b> O(1) for iterative, O(log n) for recursive (due to call stack).</li>
+                <li><b>Use Cases:</b>
+                    <ul style='margin:0.3em 0 0 1.2em;'>
+                        <li>Searching in sorted arrays or lists</li>
+                        <li>Finding boundaries (lower/upper bounds) in sorted data</li>
+                        <li>Efficient lookups in databases, dictionaries, etc.</li>
+                    </ul>
+                </li>
+                <li><b>Example:</b><br>
+                    <span style='display:inline-block;background:#f0f4fa;padding:0.5em 0.8em;border-radius:6px;'>
+                        Array: [1, <b>3</b>, 5, 7, 9, 11, 13]<br>
+                        Target: <b>3</b><br>
+                        Steps:<br>
+                        1. low=0, high=6, mid=3 (arr[3]=7). 3 &lt; 7, so high=2.<br>
+                        2. low=0, high=2, mid=1 (arr[1]=3). 3 == 3, found at index 1.
+                    </span>
+                </li>
+            </ul>
+        </div>
+        <button id="bs-start-sim-btn" style="margin-bottom:1.2em;">Start Simulation</button>
+    `;
+    document.getElementById('bs-start-sim-btn').onclick = function() {
+        renderBinarySearchInputForm();
+    };
+}
+
+function renderBinarySearchInputForm() {
+    renderAlgorithmInfo('binary-search');
+    inputSection.innerHTML += `
+        <form id="bs-form">
+            <label>Enter sorted array (comma separated):<br>
+                <input type="text" id="bs-array" required placeholder="e.g. 1, 2, 5, 8, 9">
+            </label><br><br>
+            <label>Number to search:<br>
+                <input type="number" id="bs-target" required placeholder="e.g. 8">
+            </label><br><br>
+            <button type="submit">Simulate</button>
+        </form>
+    `;
+    $('#bs-form').onsubmit = handleBinarySearchInput;
+}
+
+// Handle Binary Search input submission
+function handleBinarySearchInput(e) {
+    e.preventDefault();
+    const arrStr = $('#bs-array').value.trim();
+    const targetStr = $('#bs-target').value.trim();
+    if (!arrStr || !targetStr) return;
+    const arr = arrStr.split(',').map(s => Number(s.trim())).filter(n => !isNaN(n));
+    const target = Number(targetStr);
+    if (arr.length === 0 || isNaN(target)) {
+        alert('Please enter a valid sorted array and target number.');
+        return;
+    }
+    // Check if array is sorted
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] < arr[i-1]) {
+            alert('Array must be sorted in ascending order for binary search.');
+            return;
+        }
+    }
+    steps = buildBinarySearchSteps(arr, target);
+    currentStep = 0;
+    inputSection.innerHTML = '';
+    updateBinarySearchStep();
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+    backBtn.classList.remove('hidden');
+}
+
+// Build step-by-step states for Binary Search
+function buildBinarySearchSteps(arr, target) {
+    const steps = [];
+    let low = 0, high = arr.length - 1;
+    while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        steps.push({
+            arr,
+            target,
+            low,
+            mid,
+            high,
+            found: arr[mid] === target,
+            done: arr[mid] === target,
+        });
+        if (arr[mid] === target) break;
+        if (arr[mid] < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    // If not found, add a final step
+    if (!arr.includes(target)) {
+        steps.push({
+            arr,
+            target,
+            low,
+            mid: null,
+            high,
+            found: false,
+            done: true,
+        });
+    }
+    return steps;
+}
+
+// Update the visualization and explanation for the current step (Binary Search)
+function updateBinarySearchStep() {
+    if (!steps.length) return;
+    const step = steps[currentStep];
+    visualization.innerHTML = step.arr.map((num, idx) => {
+        let cls = '';
+        if (idx < step.low || idx > step.high) cls = 'bs-outside';
+        else if (idx === step.low && idx === step.high && idx === step.mid && step.found) cls = 'bs-found';
+        else if (idx === step.mid && step.found) cls = 'bs-found';
+        else if (idx === step.mid) cls = 'bs-mid';
+        else if (idx === step.low) cls = 'bs-low';
+        else if (idx === step.high) cls = 'bs-high';
+        return `<span class="bs-item ${cls}">
+            <div>${num}</div>
+            <div class="bs-index">${idx}</div>
+        </span>`;
+    }).join(' ');
+    // Detailed Explanation
+    if (step.done && !step.found) {
+        explanation.innerHTML = `Number <b>${step.target}</b> was not found in the array.<br>
+        The search range is empty (low = ${step.low}, high = ${step.high}).`;
+    } else if (step.found) {
+        explanation.innerHTML = `Low = <b>${step.low}</b>, High = <b>${step.high}</b>, Mid = <b>${step.mid}</b>.<br>
+        <b>Checking element at index ${step.mid}: ${step.arr[step.mid]}</b>.<br>
+        <span style='color:#4caf50;'>${step.arr[step.mid]} equals the target ${step.target}.</span><br>
+        <b>Search complete!</b>`;
+    } else {
+        let compare, action;
+        if (step.arr[step.mid] < step.target) {
+            compare = `<span style='color:#e53935;'>${step.arr[step.mid]} &lt; ${step.target}</span>`;
+            action = `Move <b>low</b> to <b>mid + 1</b> (low = ${step.mid + 1})`;
+        } else if (step.arr[step.mid] > step.target) {
+            compare = `<span style='color:#e53935;'>${step.arr[step.mid]} &gt; ${step.target}</span>`;
+            action = `Move <b>high</b> to <b>mid - 1</b> (high = ${step.mid - 1})`;
+        } else {
+            compare = `<span style='color:#4caf50;'>${step.arr[step.mid]} == ${step.target}</span>`;
+            action = `<b>Found!</b>`;
+        }
+        explanation.innerHTML = `Low = <b>${step.low}</b> (value: ${step.arr[step.low]}), High = <b>${step.high}</b> (value: ${step.arr[step.high]}), Mid = <b>${step.mid}</b> (value: ${step.arr[step.mid]}).<br>
+        Compare: ${compare}.<br>
+        ${action}`;
+    }
+    // Button states
+    prevBtn.disabled = currentStep === 0;
+    nextBtn.disabled = currentStep === steps.length - 1;
+}
+
+// Step navigation (update for binary search)
+const origPrev = prevBtn.onclick;
+const origNext = nextBtn.onclick;
+prevBtn.onclick = function() {
+    if (currentAlgo === 'binary-search') {
+        if (currentStep > 0) {
+            currentStep--;
+            updateBinarySearchStep();
+        }
+    } else if (origPrev) {
+        origPrev();
+    }
+};
+nextBtn.onclick = function() {
+    if (currentAlgo === 'binary-search') {
+        if (currentStep < steps.length - 1) {
+            currentStep++;
+            updateBinarySearchStep();
+        }
+    } else if (origNext) {
+        origNext();
+    }
+};
 
 // Add styles for visualization highlights
 document.head.insertAdjacentHTML('beforeend', `<style>
@@ -184,4 +388,99 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     color: #fff;
     font-weight: bold;
 }
+.bs-item {
+    display: inline-block;
+    min-width: 2.2em;
+    padding: 0.5em 0.7em;
+    margin: 0 0.2em;
+    border-radius: 6px;
+    background: #e3edff;
+    font-size: 1.1em;
+    transition: background 0.2s, color 0.2s;
+    position: relative;
+    vertical-align: bottom;
+}
+.bs-item.bs-low {
+    background: #4caf50;
+    color: #fff;
+    font-weight: bold;
+}
+.bs-item.bs-high {
+    background: #e53935;
+    color: #fff;
+    font-weight: bold;
+}
+.bs-item.bs-mid {
+    background: #ffb84f;
+    color: #fff;
+    font-weight: bold;
+}
+.bs-item.bs-found {
+    background: #4f8cff;
+    color: #fff;
+    font-weight: bold;
+}
+.bs-item.bs-outside {
+    opacity: 0.3;
+    background: #e0e0e0;
+    color: #888;
+}
+.bs-index {
+    display: block;
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 0.15em;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+.algo-info-box {
+    background: #e3edff;
+    border-left: 4px solid #4f8cff;
+    border-radius: 8px;
+    padding: 1em 1.2em;
+    margin-bottom: 1em;
+    color: #2a4d8f;
+    font-size: 1.02em;
+}
 </style>`);
+
+function renderBinarySearchLegend() {
+    const legend = document.createElement('div');
+    legend.id = legendId;
+    legend.style.margin = '0.5rem 0 1rem 0';
+    legend.innerHTML = `
+        <span class="bs-item bs-low" style="margin-right:8px;">Low</span>
+        <span class="bs-item bs-high" style="margin-right:8px;">High</span>
+        <span class="bs-item bs-mid" style="margin-right:8px;">Mid</span>
+        <span class="bs-item bs-found" style="margin-right:8px;">Found</span>
+        <span class="bs-item bs-outside" style="margin-right:8px;">Outside Range</span>
+    `;
+    visualization.parentNode.insertBefore(legend, visualization);
+}
+
+// Show algorithm info above input fields
+function renderAlgorithmInfo(algo) {
+    let info = '';
+    if (algo === 'linear-search') {
+        info = `<div class="algo-info-box">
+            <b>About Linear Search:</b><br>
+            Linear Search checks each element in the array one by one to find the target value.<br>
+            <ul style='margin:0.5em 0 0 1.2em;'>
+                <li>The array can be <b>unsorted</b> or <b>sorted</b>.</li>
+                <li>You can search for <b>any number</b> in the array.</li>
+                <li>It is simple but may be slow for large arrays.</li>
+            </ul>
+        </div>`;
+    } else if (algo === 'binary-search') {
+        info = `<div class="algo-info-box">
+            <b>About Binary Search:</b><br>
+            Binary Search is a fast algorithm for finding a value in a <b>sorted</b> array.<br>
+            <ul style='margin:0.5em 0 0 1.2em;'>
+                <li>The array <b>must be sorted in ascending order</b>.<br>
+                    <span style='color:#e53935;'>Reason:</span> Binary Search works by repeatedly dividing the search range in half. If the array is not sorted, this process will not work correctly.</li>
+                <li>It is much faster than linear search for large arrays.</li>
+            </ul>
+        </div>`;
+    }
+    inputSection.innerHTML = info + inputSection.innerHTML;
+}
